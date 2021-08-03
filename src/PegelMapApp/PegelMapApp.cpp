@@ -19,7 +19,7 @@
 
 using namespace Esri::ArcGISRuntime;
 
-PegelMapApp::PegelMapApp(QQuickItem* parent /* = nullptr */):
+PegelMapApp::PegelMapApp(QQuickItem *parent /* = nullptr */):
     QQuickItem(parent)
 {
 }
@@ -39,11 +39,29 @@ void PegelMapApp::componentComplete()
     m_map = new Map(Basemap::openStreetMap(this), this);
 
     // Add a WMS layer
-    const QUrl wmsServiceUrl("http://www.pegelonline.wsv.de/webservices/gis/wms/aktuell/mnwmhw?request=GetCapabilities&service=WMS&version=1.1.1");
-    const QStringList layerNames{"PegelonlineWMS"};
-    WmsLayer* wmsLayer = new WmsLayer(wmsServiceUrl, layerNames, this);
-    m_map->operationalLayers()->append(wmsLayer);
+    addWmsLayer("http://www.pegelonline.wsv.de/webservices/gis/wms/aktuell/mnwmhw?request=GetCapabilities&service=WMS&version=1.1.1", {"PegelonlineWMS"});
+    addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms?request=GetCapabilities&service=WMS&version=1.1.0", {"Gewaesser"});
+
+    //const QUrl wmsServiceUrl("https://maps.dwd.de/geoserver/dwd/ows?request=GetCapabilities&service=WMS");
+    //const QUrl wmsServiceUrl("https://nowcoast.noaa.gov/arcgis/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/WMSServer?request=GetCapabilities&service=WMS");
+    //const QStringList layerNames{"Biowettervorhersage"};
+    //const QStringList layerNames{"1"};
+
+    /*
+    QMap<QString, QString> wmsParameters;
+    QDateTime dateTime = QDateTime::currentDateTimeUtc().addDays(-1);//.addSecs(-1 * 60 * 60);
+    QString timeParameterValue = dateTime.toString(Qt::ISODate);
+    qDebug() << timeParameterValue;
+    wmsParameters.insert("TIME", timeParameterValue);
+    wmsLayer->setCustomParameters(wmsParameters);
+    */
 
     // Set map to map view
     m_mapView->setMap(m_map);
+}
+
+void PegelMapApp::addWmsLayer(const QString &wmsServiceUri, const QStringList &layerNames)
+{
+    WmsLayer* wmsLayer = new WmsLayer(QUrl(wmsServiceUri), layerNames, this);
+    m_map->operationalLayers()->append(wmsLayer);
 }
