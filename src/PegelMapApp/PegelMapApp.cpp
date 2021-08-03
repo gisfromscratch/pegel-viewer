@@ -39,8 +39,8 @@ void PegelMapApp::componentComplete()
     m_map = new Map(Basemap::openStreetMap(this), this);
 
     // Add a WMS layer
+    addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms?request=GetCapabilities&service=WMS&version=1.1.0", {"Gewaesser", "RBSN_RR"});
     addWmsLayer("http://www.pegelonline.wsv.de/webservices/gis/wms/aktuell/mnwmhw?request=GetCapabilities&service=WMS&version=1.1.1", {"PegelonlineWMS"});
-    addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms?request=GetCapabilities&service=WMS&version=1.1.0", {"Gewaesser"});
 
     //const QUrl wmsServiceUrl("https://maps.dwd.de/geoserver/dwd/ows?request=GetCapabilities&service=WMS");
     //const QUrl wmsServiceUrl("https://nowcoast.noaa.gov/arcgis/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/WMSServer?request=GetCapabilities&service=WMS");
