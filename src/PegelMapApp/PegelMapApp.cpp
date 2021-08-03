@@ -13,6 +13,7 @@
 #include "Map.h"
 #include "MapQuickView.h"
 #include "Basemap.h"
+#include "WmsLayer.h"
 
 #include "PegelMapApp.h"
 
@@ -36,6 +37,12 @@ void PegelMapApp::componentComplete()
 
     // Create a map using the openStreetMap Basemap
     m_map = new Map(Basemap::openStreetMap(this), this);
+
+    // Add a WMS layer
+    const QUrl wmsServiceUrl("http://www.pegelonline.wsv.de/webservices/gis/wms/aktuell/mnwmhw?request=GetCapabilities&service=WMS&version=1.1.1");
+    const QStringList layerNames{"PegelonlineWMS"};
+    WmsLayer* wmsLayer = new WmsLayer(wmsServiceUrl, layerNames, this);
+    m_map->operationalLayers()->append(wmsLayer);
 
     // Set map to map view
     m_mapView->setMap(m_map);
