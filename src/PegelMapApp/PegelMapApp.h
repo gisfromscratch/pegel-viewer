@@ -35,7 +35,7 @@ public:
     void componentComplete() override;
 
 private:
-    void addKmlLayer(const QString &kmlServiceUri);
+    void addKmlLayer(const QString &kmlServiceUri, QDateTime *time = nullptr);
     void addWmsLayer(const QString &wmsServiceUri, const QStringList &layerNames, QDateTime *time = nullptr);
 
     Esri::ArcGISRuntime::Map*             m_map = nullptr;

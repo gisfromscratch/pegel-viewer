@@ -17,6 +17,7 @@
 #include "WmsLayer.h"
 
 #include "PegelMapApp.h"
+#include "DateTimeUtils.h"
 
 using namespace Esri::ArcGISRuntime;
 
@@ -43,7 +44,9 @@ void PegelMapApp::componentComplete()
     //addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms", {"Gewaesser", "RBSN_RR"});
     //addWmsLayer("http://www.pegelonline.wsv.de/webservices/gis/wms/aktuell/mnwmhw", {"PegelonlineWMS"});
     //addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms", {"Niederschlagsradar"});
-    addKmlLayer("https://maps.dwd.de/geoserver/dwd/wms/kml?layers=dwd%3ANiederschlagsradar");
+    QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
+    QDateTime dateTime = DateTimeUtils::roundNearestFiveMinutesDown(currentDateTime);
+    addKmlLayer("https://maps.dwd.de/geoserver/dwd/wms/kml?layers=dwd%3ANiederschlagsradar", &dateTime);
 
     //const QUrl wmsServiceUrl("https://maps.dwd.de/geoserver/dwd/ows?request=GetCapabilities&service=WMS");
     //const QUrl wmsServiceUrl("https://nowcoast.noaa.gov/arcgis/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/WMSServer?request=GetCapabilities&service=WMS");
@@ -63,9 +66,25 @@ void PegelMapApp::componentComplete()
     m_mapView->setMap(m_map);
 }
 
-void PegelMapApp::addKmlLayer(const QString &kmlServiceUri)
+void PegelMapApp::addKmlLayer(const QString &kmlServiceUri, QDateTime *time)
 {
-    KmlDataset *kmlDataset = new KmlDataset(QUrl(kmlServiceUri), this);
+    KmlDataset *kmlDataset = nullptr;
+
+    // Add time restriction
+    if (nullptr != time)
+    {
+        QString timeParameterValue = time->toString(Qt::ISODate);
+        qDebug() << timeParameterValue;
+
+        QString timeEnabledkmlServiceUri = QString(kmlServiceUri).append("&time=%1").arg(timeParameterValue);
+        qDebug() << timeEnabledkmlServiceUri;
+        kmlDataset = new KmlDataset(QUrl(timeEnabledkmlServiceUri), this);
+    }
+    else
+    {
+        kmlDataset = new KmlDataset(QUrl(kmlServiceUri), this);
+    }
+
     KmlLayer *kmlLayer = new KmlLayer(kmlDataset, this);
     connect(kmlLayer, &KmlLayer::loadStatusChanged, [kmlLayer] (LoadStatus loadStatus)
     {
@@ -74,6 +93,9 @@ void PegelMapApp::addKmlLayer(const QString &kmlServiceUri)
         case LoadStatus::Loaded:
             {
                 qDebug() << kmlLayer->description();
+                qDebug() << "Time enabled: " << kmlLayer->isSupportsTimeFiltering();
+                qDebug() << kmlLayer->fullTimeExtent().startTime();
+                qDebug() << kmlLayer->fullTimeExtent().endTime();
             }
             break;
 

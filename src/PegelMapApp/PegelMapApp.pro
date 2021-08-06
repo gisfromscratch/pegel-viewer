@@ -32,9 +32,11 @@ include($$PWD/arcgisruntime.pri)
 
 HEADERS += \
     AppInfo.h \
+    DateTimeUtils.h \
     PegelMapApp.h
 
 SOURCES += \
+    DateTimeUtils.cc \
     main.cpp \
     PegelMapApp.cpp
 
