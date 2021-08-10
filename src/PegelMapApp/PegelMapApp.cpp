@@ -45,11 +45,12 @@ void PegelMapApp::componentComplete()
     addWmsLayer("http://www.pegelonline.wsv.de/webservices/gis/wms/aktuell/mnwmhw", {"PegelonlineWMS"});
     //addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms", {"Niederschlagsradar"});
     //addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms", {"RBSN_RR"});
-    /*
+
     QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
     QDateTime dateTime = DateTimeUtils::roundNearestFiveMinutesDown(currentDateTime);
-    addKmlLayer("https://maps.dwd.de/geoserver/dwd/wms/kml?layers=dwd%3ANiederschlagsradar", &dateTime);
-    */
+    addWmsLayer("https://maps.dwd.de/geoserver/dwd/wms", {"Niederschlagsradar"}, &dateTime);
+    //addKmlLayer("https://maps.dwd.de/geoserver/dwd/wms/kml?layers=dwd%3ANiederschlagsradar", &dateTime);
+
     //addKmlLayer("https://maps.dwd.de/geoserver/dwd/wms/kml?layers=dwd%3ANiederschlagsradar");
 
     //const QUrl wmsServiceUrl("https://maps.dwd.de/geoserver/dwd/ows?request=GetCapabilities&service=WMS");
