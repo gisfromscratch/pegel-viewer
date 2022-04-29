@@ -19,15 +19,15 @@ CONFIG += c++11
 TARGET = PegelMapApp
 
 equals(QT_MAJOR_VERSION, 5) {
-    lessThan(QT_MINOR_VERSION, 9) { 
-        error("$$TARGET requires Qt 5.9.2")
+    lessThan(QT_MINOR_VERSION, 12) {
+        error("$$TARGET requires Qt 5.12.2")
     }
-	equals(QT_MINOR_VERSION, 9) : lessThan(QT_PATCH_VERSION, 2) {
-		error("$$TARGET requires Qt 5.9.2")
+        equals(QT_MINOR_VERSION, 12) : lessThan(QT_PATCH_VERSION, 2) {
+                error("$$TARGET requires Qt 5.12.2")
 	}
 }
 
-ARCGIS_RUNTIME_VERSION = 100.4
+ARCGIS_RUNTIME_VERSION = 100.14
 include($$PWD/arcgisruntime.pri)
 
 HEADERS += \
